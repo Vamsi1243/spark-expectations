@@ -107,12 +107,16 @@ if __name__ == "__main__":
     build_new()
 
     spark.sql("use dq_spark_dev")
+    spark.sql("select * from order_source").show(truncate=False)
+    print("DQ Stats")
     spark.sql("select * from dq_spark_dev.dq_stats").show(truncate=False)
-    spark.sql("select * from dq_spark_dev.dq_stats_detailed").show(truncate=False)
-    spark.sql("select * from dq_spark_dev.dq_stats_querydq_output").show(truncate=False)
-    spark.sql("select * from dq_spark_dev.dq_stats").printSchema()
-    spark.sql("select * from dq_spark_dev.dq_stats_detailed").printSchema()
-    spark.sql("select * from dq_spark_dev.customer_order").show(truncate=False)
+    print("DQ Stats Detailed")
+    spark.sql("select * from dq_spark_dev.dq_stats_detailed_v").show(truncate=False)
+    print("DQ querydq output")
+    spark.sql("select * from dq_spark_dev.dq_stats_querydq_output_v").show(truncate=False)
+    # spark.sql("select * from dq_spark_dev.dq_stats").printSchema()
+    # spark.sql("select * from dq_spark_dev.dq_stats_detailed").printSchema()
+    # spark.sql("select * from dq_spark_dev.customer_order").show(truncate=False)
     # spark.sql("select count(*) from dq_spark_local.customer_order_error ").show(
     #    truncate=False
     # )
