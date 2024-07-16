@@ -294,11 +294,11 @@ class SparkExpectationsWriter:
                             _table_name,
                             _rowdq_rule["rule_type"],
                             _rowdq_rule["rule"],
+                            _rowdq_rule["column_name"],  # adding column name vikas
                             _rowdq_rule["expectation"],
-                            _rowdq_rule["column_name"], #adding column name vikas
                             _rowdq_rule["tag"],
                             _rowdq_rule["description"],
-                            "pass" if int(failed_row_count) == _rowdq_rule["error_drop_threshold"] or int(failed_row_count)==0  else "fail",#thresold feature added sudeep
+                            "pass" if int(failed_row_count) <=((_rowdq_rule["error_drop_threshold"])/100 * _input_count) or int(failed_row_count)==0  else "fail",#thresold feature added sudeep
                             None,
                             None,
                             (_input_count - int(failed_row_count)) if int(failed_row_count) != 0 else 0,# fix error column actual sudeep
@@ -520,8 +520,8 @@ class SparkExpectationsWriter:
                 "table_name",
                 "rule_type",
                 "rule",
-                "source_expectations",
                 "column_name",  # vikas
+                "source_expectations",
                 "tag",
                 "description",
                 "source_dq_status",
@@ -541,8 +541,8 @@ class SparkExpectationsWriter:
                 "table_name",
                 "rule_type",
                 "rule",
-                "target_expectations",
                 "column_name",  # vikas
+                "target_expectations",
                 "tag",
                 "description",
                 "target_dq_status",
@@ -610,7 +610,7 @@ class SparkExpectationsWriter:
 
         _df_detailed_stats = _df_source_aggquery_detailed_stats.join(
             _df_target_aggquery_detailed_stats,
-            ["run_id", "product_id", "table_name", "rule_type", "rule","column_name"], #vikas
+            ["run_id", "product_id", "table_name", "rule_type", "rule", "column_name"], #vikas
             "full_outer",
         )
 

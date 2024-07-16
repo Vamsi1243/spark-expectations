@@ -407,9 +407,13 @@ class SparkExpectationsActions:
                 else:
                     row_count = None
 
-                actual_row_count = row_count if _query_dq_result else None
+                # actual_row_count = row_count if _query_dq_result else None
+                #
+                # error_row_count = 0 if _query_dq_result else row_count
 
-                error_row_count = 0 if _query_dq_result else row_count
+                actual_row_count = row_count if _query_dq_result and status == "pass" else (row_count-actual_outcome)
+
+                error_row_count = 0 if _query_dq_result and status == "pass" else (row_count-actual_row_count)
 
             else:
                 status = None

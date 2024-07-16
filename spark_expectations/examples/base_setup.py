@@ -18,44 +18,44 @@ RULES_TABLE_SCHEMA = """ ( product_id STRING,
     enable_for_target_dq_validation BOOLEAN,
     is_active BOOLEAN,
     enable_error_drop_alert BOOLEAN,
-    error_drop_threshold INT ,
+    error_drop_threshold double ,
     query_dq_delimiter STRING,
     enable_querydq_custom_output BOOLEAN
     )
-"""
+"""#changes by sudeep
 
 
+# RULES_DATA = """
+#
+#      ("your_product", "dq_spark_local.customer_order", "row_dq", "sales_greater_than_zero", "sales", "sales > 2000", "ignore", "accuracy", "sales value should be greater than zero", false, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "discount_threshold", "discount", "discount*100 < 60","drop", "validity", "discount should be less than 40", true, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "ship_mode_in_set", "ship_mode", "lower(trim(ship_mode)) in('second class', 'standard class', 'standard class')", "drop", "validity", "ship_mode mode belongs in the sets", true, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "profit_threshold", "profit", "profit>0", "ignore", "validity", "profit threshold should be greater tahn 0", false, true, true, true, 0,null, null)
+#     ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales_range type 1", "sales", "sum(sales)>99 and sum(sales)<99999", "ignore", "validity", "regex format validation for quantity",  true, true, true, false, 0, null, true)
+#     ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales_range type 2", "sales", "sum(sales) between 100 and 10000 ", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0, null, true)
+#     ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales", "sales", "sum(sales)>10000", "ignore", "validity", "regex format validation for quantity",  true, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_quantity", "quantity", "sum(quantity)>10000", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_local.customer_order", "query_dq", "product_missing_count_threshold", "*", "((select count(*) from ({source_f1}) a) - (select count(*) from ({target_f1}) b) ) < 3$source_f1$select distinct product_id,order_id from order_source$target_f1$select distinct product_id,order_id from order_target", "ignore", "validity", "row count threshold", true, true, true, false, 0,null, true)
+#     ,("your_product", "dq_spark_local.customer_order", "query_dq", "customer_missing_count_threshold","*", "((select count(*) from ({source_f1}) a join ({source_f2}) b on a.customer_id = b.customer_id) - (select count(*) from ({target_f1}) a join ({target_f2}) b on a.customer_id = b.customer_id)) > ({target_f3})$source_f1$select customer_id, count(*) from customer_source group by customer_id$source_f2$select customer_id, count(*) from order_source group by customer_id$target_f1$select customer_id, count(*) from customer_target group by customer_id$target_f2$select customer_id, count(*) from order_target group by customer_id$target_f3$select count(*) from order_source", "ignore", "validity", "customer count threshold", true, true, true, false, 0,null, true)
+#     ,("your_product", "dq_spark_dev.customer_order", "query_dq", "order_count_validity", "*", "({source_f1}) > 10@source_f1@select count(*) from order_source", "ignore", "validity", "row count threshold", true, true, true, false, 0, "@", true)
+#     ,("your_product", "dq_spark_local.customer_order", "query_dq", "order_count_validity_check", "*", "(select count(*) from order_source) > 10", "ignore", "validity", "row count threshold", true, true, true, false, 0, null, true)
+#     ,("your_product", "dq_spark_{env}.customer_order", "query_dq", "product_category", "*", "(select count(distinct category) from {table}) < 5", "ignore", "validity", "distinct product category", true, true, true, false, 0,null, true)
+#     ,("your_product", "dq_spark_{env}.customer_order", "agg_dq", "distinct_of_ship_mode", "ship_mode", "count(distinct ship_mode) <= 3", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0,null, null)
+#     ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check","customer_id", "({result_tbl})=0$result_tbl$(select count(*) from (select a.customer_id c_src, b.customer_id as c_master from order_source a left join order_target b on regexp_replace(trim(a.customer_id), '^[0]*', '') = regexp_replace(trim(b.customer_id), '^[0]*', '')) where c_master is null)$count_src$select count(*) from order_source$count_trg$select count(*) from order_target", "ignore", "validity", "customer count threshold", true, false, true, false, 0,"$", true)
+#
+#     """
+
+# RULES_DATA = """
+#
+#("your_product", "dq_spark_{env}.customer_order", "row_dq", "duplicate_check", "customer_id", "count(*) over(partition by customer_id order by 1)=1", "ignore", "uniqueness", "Duplicate check customer_id",true, false, true, false, 11, null, false)
+#
+# """
+#
 RULES_DATA = """
 
-     ("your_product", "dq_spark_local.customer_order", "row_dq", "sales_greater_than_zero", "sales", "sales > 2000", "ignore", "accuracy", "sales value should be greater than zero", false, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "discount_threshold", "discount", "discount*100 < 60","drop", "validity", "discount should be less than 40", true, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "ship_mode_in_set", "ship_mode", "lower(trim(ship_mode)) in('second class', 'standard class', 'standard class')", "drop", "validity", "ship_mode mode belongs in the sets", true, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "profit_threshold", "profit", "profit>0", "ignore", "validity", "profit threshold should be greater tahn 0", false, true, true, true, 0,null, null)
-    ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales_range type 1", "sales", "sum(sales)>99 and sum(sales)<99999", "ignore", "validity", "regex format validation for quantity",  true, true, true, false, 0, null, true)
-    ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales_range type 2", "sales", "sum(sales) between 100 and 10000 ", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0, null, true)
-    ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_sales", "sales", "sum(sales)>10000", "ignore", "validity", "regex format validation for quantity",  true, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_local.customer_order", "agg_dq", "sum_of_quantity", "quantity", "sum(quantity)>10000", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_local.customer_order", "query_dq", "product_missing_count_threshold", "*", "((select count(*) from ({source_f1}) a) - (select count(*) from ({target_f1}) b) ) < 3$source_f1$select distinct product_id,order_id from order_source$target_f1$select distinct product_id,order_id from order_target", "ignore", "validity", "row count threshold", true, true, true, false, 0,null, true)
-    ,("your_product", "dq_spark_local.customer_order", "query_dq", "customer_missing_count_threshold","*", "((select count(*) from ({source_f1}) a join ({source_f2}) b on a.customer_id = b.customer_id) - (select count(*) from ({target_f1}) a join ({target_f2}) b on a.customer_id = b.customer_id)) > ({target_f3})$source_f1$select customer_id, count(*) from customer_source group by customer_id$source_f2$select customer_id, count(*) from order_source group by customer_id$target_f1$select customer_id, count(*) from customer_target group by customer_id$target_f2$select customer_id, count(*) from order_target group by customer_id$target_f3$select count(*) from order_source", "ignore", "validity", "customer count threshold", true, true, true, false, 0,null, true)
-    ,("your_product", "dq_spark_dev.customer_order", "query_dq", "order_count_validity", "*", "({source_f1}) > 10@source_f1@select count(*) from order_source", "ignore", "validity", "row count threshold", true, true, true, false, 0, "@", true)
-    ,("your_product", "dq_spark_local.customer_order", "query_dq", "order_count_validity_check", "*", "(select count(*) from order_source) > 10", "ignore", "validity", "row count threshold", true, true, true, false, 0, null, true)
-    ,("your_product", "dq_spark_{env}.customer_order", "query_dq", "product_category", "*", "(select count(distinct category) from {table}) < 5", "ignore", "validity", "distinct product category", true, true, true, false, 0,null, true)
-    ,("your_product", "dq_spark_{env}.customer_order", "agg_dq", "distinct_of_ship_mode", "ship_mode", "count(distinct ship_mode) <= 3", "ignore", "validity", "regex format validation for quantity", true, true, true, false, 0,null, null)
-    ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check","customer_id", "({result_tbl})=0$result_tbl$(select count(*) from (select a.customer_id c_src, b.customer_id as c_master from order_source a left join order_target b on regexp_replace(trim(a.customer_id), '^[0]*', '') = regexp_replace(trim(b.customer_id), '^[0]*', '')) where c_master is null)$count_src$select count(*) from order_source$count_trg$select count(*) from order_target", "ignore", "validity", "customer count threshold", true, false, true, false, 0,"$", true)
+("your_product", "dq_spark_{env}.customer_order", "query_dq", "Integrity_check", "sales", "(select count(*) from (select a.customer_id src_cust, b.customer_id m_cust from order_source a left join order_target b on regexp_replace(trim(a.customer_id), '^[0]*', '') = regexp_replace(trim(b.customer_id), '^[0]*', '')) where m_cust is null)=0", "ignore", "Validity", "Data recon", true, false, true, false,50,null, false)
 
-    """
-
-# RULES_DATA = """
-#
-# ("your_product", "dq_spark_{env}.customer_order", "row_dq", "duplicate_check", "customer_id", "count(*) over(partition by customer_id order by 1)=1", "ignore", "uniqueness", "Duplicate check customer_id", true, false, true, false, 0,null, false)
-#
-# """
-#
-# RULES_DATA = """
-#
-# ("your_product", "dq_spark_{env}.customer_order", "query_dq", "Integrity_check", "sales", "(select count(*) from (select sum(test) from (select case when sales>profit then 0 else 1 end as test from order_s)))=0", "ignore", "Validity", "Data recon", true, false, true, false, 0,null, true)
-#
-# """
+"""
 
 def set_up_kafka() -> None:
     print("create or run if exist docker container")
