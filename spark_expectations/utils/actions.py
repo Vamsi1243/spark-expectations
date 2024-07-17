@@ -2,6 +2,7 @@ from typing import Dict, List, Any, Optional, Tuple
 import re
 from datetime import datetime
 from pyspark.sql import DataFrame
+from spark_expectations import _log
 
 
 from pyspark.sql.functions import (
@@ -115,6 +116,8 @@ class SparkExpectationsActions:
         return (
             not _parentheses_branch_check
         )  # return True if no unmatched left parentheses remain
+
+    _log.info("agg_query_dq_detailed_result getting started")
 
     @staticmethod
     def agg_query_dq_detailed_result(
@@ -335,6 +338,7 @@ class SparkExpectationsActions:
                                 _dq_rule["product_id"],
                                 _dq_rule["table_name"],
                                 _dq_rule["rule"],
+                                _dq_rule["column_name"],
                                 _key,
                                 _query_prefix,
                                 dict(
@@ -411,9 +415,9 @@ class SparkExpectationsActions:
                 #
                 # error_row_count = 0 if _query_dq_result else row_count
 
-                actual_row_count = row_count if _query_dq_result and status == "pass" else (row_count-actual_outcome)
+                actual_row_count = row_count if _query_dq_result else (row_count-actual_outcome)
 
-                error_row_count = 0 if _query_dq_result and status == "pass" else (row_count-actual_row_count)
+                error_row_count = 0 if _query_dq_result else (row_count-actual_row_count)
 
             else:
                 status = None
@@ -444,6 +448,8 @@ class SparkExpectationsActions:
             raise SparkExpectationsMiscException(
                 f"error occurred while running agg_query_dq_detailed_result {e}"
             )
+
+    _log.info("agg_query_dq_detailed_result completed")
 
     @staticmethod
     def create_agg_dq_results(

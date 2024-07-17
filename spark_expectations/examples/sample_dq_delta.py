@@ -104,6 +104,7 @@ def build_new() -> DataFrame:
 
 
 if __name__ == "__main__":
+    _log.info("New build started SE Team")
     build_new()
 
     spark.sql("use dq_spark_dev")
