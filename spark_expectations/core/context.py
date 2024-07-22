@@ -1091,6 +1091,22 @@ class SparkExpectationsContext:
         if self.get_debugger_mode:
             df.show(truncate=False)
 
+    def print_string_with_debugger(self, msg: str) -> None:
+        """
+        This function has a debugger that can print out the string
+        Returns:
+        """
+        if self.get_debugger_mode:
+            print(msg)
+
+    def print_dict_with_debugger(self, msg_dict: dict) -> None:
+        """
+        This function has a debugger that can print out the string
+        Returns:
+        """
+        if self.get_debugger_mode:
+            print(msg_dict)
+
     def set_supported_df_query_dq(self) -> DataFrame:
         return self.spark.createDataFrame(
             [

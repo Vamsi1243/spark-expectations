@@ -354,6 +354,9 @@ class SparkExpectationsReader:
                 _rules_execution_settings = self._get_rules_execution_settings(
                     _rules_df
                 )
+            self._context.print_string_with_debugger(f'reader.py get_rules_from_df _dq_queries_dict : {_dq_queries_dict}')
+            self._context.print_string_with_debugger(f'reader.py get_rules_from_df _expectations : {_expectations}')
+            self._context.print_string_with_debugger(f'reader.py get_rules_from_df _rules_execution_settings: {_rules_execution_settings}')
 
             return _dq_queries_dict, _expectations, _rules_execution_settings
         except Exception as e:
@@ -402,5 +405,6 @@ class SparkExpectationsReader:
         )
 
         rule_execution_settings = df.collect()[0].asDict()
+        self._context.print_string_with_debugger(f'reader.py _get_rules_execution_settings rule_execution_settings: {rule_execution_settings}')
 
         return rule_execution_settings

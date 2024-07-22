@@ -418,6 +418,7 @@ class SparkExpectationsActions:
                 actual_row_count = row_count if _query_dq_result else (row_count-actual_outcome)
 
                 error_row_count = 0 if _query_dq_result else (row_count-actual_row_count)
+                status = "pass" if (error_row_count <= ((_dq_rule["error_drop_threshold"] / 100) * row_count)) else "fail"  # changes by sudeep
 
             else:
                 status = None

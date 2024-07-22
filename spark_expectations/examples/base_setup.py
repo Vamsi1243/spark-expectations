@@ -25,19 +25,19 @@ RULES_TABLE_SCHEMA = """ ( product_id STRING,
 """#changes by sudeep
 
 
-# RULES_DATA = """
-#
-#      ("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check_row", "row_id", "row_id is not null", "ignore", "accuracy", "Null check row_id", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check_ord", "order_date", "order_date is not null", "ignore", "accuracy", "Null check order_date", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check", "customer_id", "customer_id is not null", "ignore", "accuracy", "Null check customer_id", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "junk_check", "customer_id", "customer_id not in  ('[~@^[()] | [[:cntrl:]]')", "ignore", "accuracy", "Junk check", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "date_formate_check", "order_date", "to_date(order_date, 'yyyy/MM/dd') is not null", "ignore", "accuracy", "date format check", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "date_lenght_check", "customer_id", "length(customer_id) between 0 and 8", "ignore", "accuracy", "date length check", false, true, true, false, 0,null, null)
-#     ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_cust","customer_id", "(select count(customer_id) from order_source where customer_id not in (select customer_id from order_target))=0", "ignore", "validity", "customer id check", true, false, true, false, 0,null, false)
-#     ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_ord","order_id", "(select count(*) from (select a.order_id src, b.order_id trg from order_source a left join order_target b on regexp_replace(trim(a.order_id), '^[0]*', '') = regexp_replace(trim(b.order_id), '^[0]*', '')) where trg is null)=0", "ignore", "validity", "order id check ", true, false, true, false, 0,null, false)
-#     ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_recon","*", "(select count(*) from (select a.sales src, b.sales trg from order_source a left join order_target b on regexp_replace(trim(a.customer_id), '^[0]*', '') = regexp_replace(trim(b.customer_id), '^[0]*', '') and regexp_replace(trim(a.sales), '^[0]*', '') = regexp_replace(trim(b.sales), '^[0]*', '')) where trg is null)=0", "ignore", "validity", "Data reconciliation", true, false, true, false, 0,null, false)
-#
-#     """
+RULES_DATA = """
+
+     ("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check_row", "row_id", "row_id is not null", "ignore", "accuracy", "Null check row_id", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check_ord", "order_date", "order_date is not null", "ignore", "accuracy", "Null check order_date", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "null_check", "customer_id", "customer_id is not null", "ignore", "accuracy", "Null check customer_id", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "junk_check", "customer_id", "customer_id not in  ('[~@^[()] | [[:cntrl:]]')", "ignore", "accuracy", "Junk check", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "date_formate_check", "order_date", "to_date(order_date, 'yyyy/MM/dd') is not null", "ignore", "accuracy", "date format check", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_{env}.customer_order", "row_dq", "date_lenght_check", "customer_id", "length(customer_id) between 0 and 8", "ignore", "accuracy", "date length check", false, true, true, false, 0,null, null)
+    ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_cust","customer_id", "(select count(customer_id) from order_source where customer_id not in (select customer_id from order_target))=0", "ignore", "validity", "customer id check", true, false, true, false, 0,null, false)
+    ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_ord","order_id", "(select count(*) from (select a.order_id src, b.order_id trg from order_source a left join order_target b on regexp_replace(trim(a.order_id), '^[0]*', '') = regexp_replace(trim(b.order_id), '^[0]*', '')) where trg is null)=0", "ignore", "validity", "order id check ", true, false, true, false, 0,null, false)
+    ,("your_product", "dq_spark_dev.customer_order", "query_dq", "data_check_recon","*", "(select count(*) from (select a.sales src, b.sales trg from order_source a left join order_target b on regexp_replace(trim(a.customer_id), '^[0]*', '') = regexp_replace(trim(b.customer_id), '^[0]*', '') and regexp_replace(trim(a.sales), '^[0]*', '') = regexp_replace(trim(b.sales), '^[0]*', '')) where trg is null)=0", "ignore", "validity", "Data reconciliation", true, false, true, false, 70.5,null, false)
+
+    """
 
 # RULES_DATA = """
 #
@@ -54,11 +54,15 @@ RULES_TABLE_SCHEMA = """ ( product_id STRING,
 # RULES_DATA="""
 # ("your_product", "dq_spark_{env}.customer_order", "query_dq", "null_check", "row_id", "(select count(*) from order_source where row_id is null)=0", "ignore", "Accuracy", "Null check", true, false, true, false,50,null, false)
 # """
-RULES_DATA = """
+# RULES_DATA = """
+#
+# ("your_product", "dq_spark_{env}.customer_order", "query_dq", "duplicate_check", "customer_id", "(select sum(c) from (select customer_id, count(*) c from order_source group by 1 having count(*)>1))=0", "ignore", "uniqueness", "Duplicate check", true, false, true, false,0,null, false)
+#
+# """
+# RULES_DATA = """
+# ("your_product", "dq_spark_{env}.customer_order", "query_dq", "Data Integrity", "*", "(select count(*) from (select t1.customer_id as src, t2.customer_id as trg from order_source t1 left join order_target t2 on regexp_replace(trim(t1.customer_id), '^[0]*', '') = regexp_replace(trim(t2.customer_id), '^[0]*', '') where t2.customer_id is null))=0", "ignore", "Validity", "data check", true, false, true, false,0,null, false)
+# """
 
-("your_product", "dq_spark_{env}.customer_order", "query_dq", "duplicate_check", "customer_id", "(select sum(c) from (select customer_id, count(*) c from order_source group by 1 having count(1)>1))=0", "ignore", "uniqueness", "Duplicate check", true, false, true, false,0,null, false)
-
-"""
 
 # RULES_DATA = """
 # ("your_product", "dq_spark_{env}.customer_order", "query_dq", "Integrity_check", "row_id", "(select count(*) from order_source where row_id is null)=0", "ignore", "Validity", "Data recon", true, false, true, false,50,null, false)

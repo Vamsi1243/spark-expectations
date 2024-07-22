@@ -683,13 +683,13 @@ class SparkExpectationsWriter:
                 stats_table=True,
             )
 
-
-
-
             _log.info(
                 "Writing metrics to the detailed stats table: %s, ended",
                 self._context.get_dq_detailed_stats_table_name,
             )
+
+            _log.info("Detailed stats printed: ")
+            _df_detailed_stats.show(truncate=False)
 
             # TODO Create a separate function for writing the custom query dq stats
             _df_custom_detailed_stats_source = self._prep_secondary_query_output()
