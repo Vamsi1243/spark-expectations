@@ -84,7 +84,7 @@ class SparkExpectations:
         )
         self._context.set_debugger_mode(self.debugger)
         self._context.set_dq_stats_table_name(self.stats_table)
-        self._context.set_dq_detailed_stats_table_name(f"{self.stats_table}_detailed_v")
+        self._context.set_dq_detailed_stats_table_name(f"{self.stats_table}_detailed")
         self.rules_df = self.rules_df.persist(StorageLevel.MEMORY_AND_DISK)
 
     # TODO Add target_error_table_writer and stats_table_writer as parameters to this function so this takes precedence
@@ -130,7 +130,7 @@ class SparkExpectations:
                 user_config.se_enable_agg_dq_detailed_result: False,
                 user_config.se_enable_query_dq_detailed_result: False,
                 user_config.se_job_metadata: None,
-                user_config.querydq_output_custom_table_name: f"{self.stats_table}_querydq_output_v",
+                user_config.querydq_output_custom_table_name: f"{self.stats_table}_querydq_output",
             }
 
             _notification_dict: Dict[
