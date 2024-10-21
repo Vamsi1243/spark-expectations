@@ -135,6 +135,7 @@ class SparkExpectationsWriter:
             str,
             str,
             str,
+            str,
             None,
             None,
             int,
@@ -183,13 +184,16 @@ class SparkExpectationsWriter:
                                 _table_name,
                                 _rowdq_rule["rule_type"],
                                 _rowdq_rule["rule"],
+                                _rowdq_rule["column_name"],
                                 _rowdq_rule["expectation"],
                                 _rowdq_rule["tag"],
                                 _rowdq_rule["description"],
                                 "pass" if int(failed_row_count) == 0 else "fail",
                                 None,
                                 None,
-                                (_input_count - int(failed_row_count)),
+                                (_input_count - int(failed_row_count))
+                                if int(failed_row_count) != 0
+                                else _input_count,
                                 failed_row_count,
                                 _input_count,
                                 self._context.get_row_dq_start_time.replace(
@@ -214,14 +218,17 @@ class SparkExpectationsWriter:
                         _table_name,
                         _rowdq_rule["rule_type"],
                         _rowdq_rule["rule"],
+                        _rowdq_rule["column_name"],
                         _rowdq_rule["expectation"],
                         _rowdq_rule["tag"],
                         _rowdq_rule["description"],
                         "pass",
                         None,
                         None,
-                        _input_count,
-                        "0",
+                        (_input_count - int(failed_row_count))
+                        if int(failed_row_count) != 0
+                        else _input_count,
+                        failed_row_count,
                         _input_count,
                         self._context.get_row_dq_start_time.replace(
                             tzinfo=timezone.utc
@@ -310,6 +317,7 @@ class SparkExpectationsWriter:
             - product_id
             - table_name
             - rule
+            - column_name
             - alias
             - dq_type
             - source_dq
@@ -345,6 +353,7 @@ class SparkExpectationsWriter:
                 "product_id",
                 "table_name",
                 "rule",
+                "column_name",
                 "alias",
                 "dq_type",
                 "source_dq",
@@ -373,12 +382,12 @@ class SparkExpectationsWriter:
 
         _df_custom_detailed_stats_source = self._context.spark.sql(
             "select distinct source.run_id,source.product_id, source.table_name,"
-            + "source.rule,source.alias,source.dq_type,source.source_dq as source_output,"
+            + "source.rule,source.column_name,source.alias,source.dq_type,source.source_dq as source_output,"
             + "target.source_dq as target_output from _df_custom_detailed_stats_source as source "
             + "left outer join _df_custom_detailed_stats_source as target "
             + "on source.run_id=target.run_id and source.product_id=target.product_id and "
-            + "source.table_name=target.table_name and source.rule=target.rule "
-            + "and source.dq_type = target.dq_type "
+            + "source.table_name=target.table_name and source.rule=target.rule and "
+            + "source.column_name = target.column_name and source.dq_type = target.dq_type "
             + "and source.alias_comp=target.alias_comp "
             + "and source.compare = 'source' and target.compare = 'target' "
         )
@@ -419,6 +428,7 @@ class SparkExpectationsWriter:
                 "table_name",
                 "rule_type",
                 "rule",
+                "column_name",
                 "source_expectations",
                 "tag",
                 "description",
@@ -439,6 +449,7 @@ class SparkExpectationsWriter:
                 "table_name",
                 "rule_type",
                 "rule",
+                "column_name",
                 "target_expectations",
                 "tag",
                 "description",
@@ -507,7 +518,7 @@ class SparkExpectationsWriter:
 
         _df_detailed_stats = _df_source_aggquery_detailed_stats.join(
             _df_target_aggquery_detailed_stats,
-            ["run_id", "product_id", "table_name", "rule_type", "rule"],
+            ["run_id", "product_id", "table_name", "rule_type", "rule", "column_name"],
             "full_outer",
         )
 

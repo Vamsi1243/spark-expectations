@@ -127,6 +127,7 @@ class SparkExpectationsActions:
                 str,
                 str,
                 str,
+                str,
                 Any,
                 str,
                 dict,
@@ -334,6 +335,7 @@ class SparkExpectationsActions:
                                 _dq_rule["product_id"],
                                 _dq_rule["table_name"],
                                 _dq_rule["rule"],
+                                _dq_rule["column_name"],
                                 _key,
                                 _query_prefix,
                                 dict(
@@ -355,6 +357,7 @@ class SparkExpectationsActions:
                 if SparkExpectationsActions.match_parentheses(_dq_rule["expectation"]):
                     pattern = r"(\(.*\))\s*([<>!=]=?)\s*((\d+)|(\(.*\)))|(\(.*\))"
                     match = re.search(pattern, _dq_rule["expectation"])
+                    actual_outcome = 0
                     if match:
                         # function to execute SQL and get the result
                         def execute_sql_and_get_result(
@@ -404,11 +407,11 @@ class SparkExpectationsActions:
                 elif _target_dq_status:
                     row_count = _context.get_output_count
                 else:
-                    row_count = None
+                    row_count = 0
 
-                actual_row_count = row_count if _query_dq_result else None
+                actual_row_count = row_count if _query_dq_result else row_count - actual_outcome
 
-                error_row_count = 0 if _query_dq_result else row_count
+                error_row_count = 0 if _query_dq_result else actual_outcome
 
             else:
                 status = None
@@ -424,6 +427,7 @@ class SparkExpectationsActions:
                 _dq_rule["table_name"],
                 _dq_rule["rule_type"],
                 _dq_rule["rule"],
+                _dq_rule["column_name"],
                 _dq_rule["expectation"],
                 _dq_rule["tag"],
                 _dq_rule["description"],
